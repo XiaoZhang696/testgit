@@ -1,0 +1,28 @@
+#EXEC = CommandProxy
+#OBJS =  main.o  cJSON.o s2j.o Log.o
+#SRC  =  main.c  cJSON.c s2j.c ../Common/Log.c
+DIR_OBJ =  ./obj
+DIR_BIN = ./bin
+DIR_SRC = ./
+DIR_SRC += ../Common
+
+SRC = $(wildcard $(DIR_SRC)/*.c)  
+OBJ = $(patsubst %.c,$(DIR_OBJ)/%.o,$(notdir $(SRC))) 
+
+TARGET = CommandProxy
+BIN_TARGET = $(DIR_BIN)/$(TARGET)
+
+CC = arm-linux-gnueabihf-gcc 
+CFLAGS = -I$(DIR_SRC)
+all:$(BIN_TARGET)
+
+$(BIN_TARGET):$(OBJ)
+	$(CC)  -o $@ $(OBJ) -lpthread -lm
+
+$(DIR_OBJ)/%.o:$(DIR_SRC)/%.c
+	$(CC)  -c $(CFLAGS) $< -o $@ -lpthread
+#%.o:%.c
+#	$(CC)  -c $(CFLAGS) $< -o $@ -lpthread
+.PHONY:clean
+clean:
+	@rm -vf $(EXEC) *.o *~
